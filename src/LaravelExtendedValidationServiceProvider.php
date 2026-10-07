@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Translation\PotentiallyTranslatedString;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator as ValidatorInstance;
 use MrPunyapal\LaravelExtendedValidation\Rules\AlphaNumAscii;
 use MrPunyapal\LaravelExtendedValidation\Rules\AlphaUnderscore;
 use MrPunyapal\LaravelExtendedValidation\Rules\Base64String;
@@ -127,8 +128,8 @@ class LaravelExtendedValidationServiceProvider extends PackageServiceProvider
             return ! $failed;
         });
 
-        Validator::replacer($name, function (string $message, string $attribute, string $rule, array $parameters) use ($name): string {
-            $replacements = $this->getRuleReplacements($name, $parameters, $attribute);
+        Validator::replacer($name, function (string $message, string $attribute, string $rule, array $parameters, ValidatorInstance $validator) use ($name): string {
+            $replacements = $this->getRuleReplacements($name, $parameters, $validator->getDisplayableAttribute($attribute));
 
             $isDefaultMessage = $message === "validation.{$name}"
                 || str_ends_with($message, ".{$name}")
