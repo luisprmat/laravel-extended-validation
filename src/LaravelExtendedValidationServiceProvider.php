@@ -101,8 +101,12 @@ class LaravelExtendedValidationServiceProvider extends PackageServiceProvider
         ];
 
         foreach ($rules as $name => $ruleClass) {
-            $this->registerStringRule($name, $ruleClass);
-            $this->registerRuleMacro($name, $ruleClass);
+            $config = config("extended-validation.rules.{$name}");
+
+            if ($config || $config === null) {
+                $this->registerStringRule($name, $ruleClass);
+                $this->registerRuleMacro($name, $ruleClass);
+            }
         }
     }
 
